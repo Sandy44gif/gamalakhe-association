@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamalakhe Association - League Management</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --ga-yellow: #FFD700;
+            --ga-black: #000000;
+            --ga-blue: #0065b3;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--ga-yellow);
+            min-height: 100vh;
+            color: var(--ga-black);
+            padding: 0;
+        }
+        
+        .device-lock {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--ga-black);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--ga-yellow);
+        }
+        
+        .device-lock::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 1;
+        }
+        
+        .device-lock-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .lock-logo {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 30px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 5px solid var(--ga-blue);
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0,101,179,0.5);
+        }
+        
+        .lock-logo img {
+            width: 90%;
+            height: 90%;
+            object-fit: contain;
+        }
+        
+        .device-lock h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--ga-yellow);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        
+        .device-lock p {
+            color: #ffffff;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .device-lock input {
+            padding: 15px;
+            font-size: 1.2rem;
+            border: 3px solid var(--ga-blue);
+            background: var(--ga-black);
+            color: var(--ga-yellow);
+            width: 300px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .device-lock button {
+            padding: 15px 40px;
+            background: var(--ga-blue);
+            color: white;
+            border: none;
+            font-weight: 800;
+            cursor: pointer;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+        
+        .device-lock button:hover {
+            background: var(--ga-yellow);
+            color: var(--ga-black);
+            transform: scale(1.05);
+        }
+        
+        .lock-contact {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid var(--ga-blue);
+        }
+        
+        .lock-contact p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+            color: var(--ga-yellow);
+        }
+        
+        .lock-contact .phone {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--ga-yellow);
+            letter-spacing: 2px;
+        }
+        
+        .lock-contact .developer {
+            margin-top: 15px;
+            font-size: 0.8rem;
+            color: #888888;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: none;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 4px solid var(--ga-black);
+            margin-bottom: 30px;
+            background: var(--ga-black);
+            color: var(--ga-yellow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .logo-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            background: white;
+            border-radius: 50%;
+            border: 5px solid var(--ga-blue);
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0,101,179,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-container img {
+            width: 90%;
+            height: 90%;
+            object-fit: contain;
+        }
+        
+        .league-title {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--ga-yellow);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 0px var(--ga-blue);
+        }
+        
+        .league-subtitle {
+            color: #ffffff;
+            font-size: 1.2rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 450px;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background: var(--ga-black);
+            border-radius: 0;
+            border: 4px solid var(--ga-black);
+            padding: 30px;
+            box-shadow: 8px 8px 0px rgba(0,101,179,0.3);
+            color: var(--ga-yellow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card.yellow-card {
+            background: var(--ga-yellow);
+            color: var(--ga-black);
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.2);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--ga-blue);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .yellow-card .card-header {
+            border-bottom: 3px solid var(--ga-black);
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--ga-yellow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+        }
+        
+        .yellow-card .card-title {
+            color: var(--ga-black);
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: 3px solid var(--ga-blue);
+            border-radius: 0;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: transparent;
+            color: var(--ga-yellow);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .yellow-card .btn {
+            border-color: var(--ga-black);
+            color: var(--ga-black);
+        }
+        
+        .btn-primary {
+            background: var(--ga-blue);
+            color: white;
+            border-color: var(--ga-blue);
+        }
+        
+        .yellow-card .btn-primary {
+            background: var(--ga-black);
+            color: var(--ga-yellow);
+            border-color: var(--ga-black);
+        }
+        
+        .btn:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 6px 6px 0px var(--ga-blue);
+            background: var(--ga-yellow);
+            color: var(--ga-black);
+        }
+        
+        .yellow-card .btn:hover {
+            box-shadow: 6px 6px 0px var(--ga-black);
+            background: var(--ga-blue);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--ga-yellow);
+        }
+        
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.8rem;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            border: 3px solid var(--ga-blue);
+            background: var(--ga-black);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .yellow-card .table-container {
+            border-color: var(--ga-black);
+            background: var(--ga-yellow);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        
+        thead {
+            background: var(--ga-blue);
+            color: white;
+        }
+        
+        th {
+            padding: 16px 10px;
+            text-align: center;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            border-right: 2px solid rgba(255,255,255,0.2);
+        }
+        
+        td {
+            padding: 14px 10px;
+            text-align: center;
+            border-bottom: 2px solid var(--ga-blue);
+            border-right: 1px solid #333333;
+            color: var(--ga-yellow);
+            font-weight: 600;
+        }
+        
+        .yellow-card td {
+            color: var(--ga-black);
+            border-bottom: 2px solid var(--ga-black);
+            border-right: 1px solid rgba(0,0,0,0.2);
+        }
+        
+        tr:nth-child(even) {
+            background: #111111;
+        }
+        
+        .yellow-card tr:nth-child(even) {
+            background: #E6C200;
+        }
+        
+        .team-cell {
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+        }
+        
+        .team-logo {
+            width: 40px;
+            height: 40px;
+            background: var(--ga-blue);
+            border: 3px solid var(--ga-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: white;
+            font-size: 0.9rem;
+            overflow: hidden;
+        }
+        
+        .team-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .pos {
+            font-weight: 900;
+            color: var(--ga-yellow);
+            width: 30px;
+            font-size: 1.2rem;
+        }
+        
+        .pos.top {
+            background: var(--ga-blue);
+            color: white;
+        }
+        
+        .points {
+            font-weight: 900;
+            color: var(--ga-black);
+            font-size: 1.3rem;
+            background: var(--ga-yellow);
+            padding: 5px;
+            border: 2px solid var(--ga-blue);
+        }
+        
+        .form-dot {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 900;
+            border: 2px solid var(--ga-blue);
+        }
+        
+        .form-w { background: var(--ga-blue); color: white; }
+        .form-d { background: var(--ga-yellow); color: var(--ga-black); border: 2px solid var(--ga-blue); }
+        .form-l { background: #333333; color: var(--ga-yellow); }
+        
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border: 2px solid var(--ga-blue);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            background: var(--ga-black);
+            color: var(--ga-yellow);
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+        
+        .icon-btn:hover {
+            background: var(--ga-blue);
+            color: white;
+        }
+        
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 800;
+            color: var(--ga-yellow);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .yellow-card label {
+            color: var(--ga-black);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--ga-black);
+            border: 3px solid var(--ga-blue);
+            border-radius: 0;
+            color: var(--ga-yellow);
+            font-size: 1rem;
+            font-weight: 700;
+        }
+        
+        .yellow-card input, .yellow-card select {
+            background: var(--ga-yellow);
+            border-color: var(--ga-black);
+            color: var(--ga-black);
+        }
+        
+        .match-form {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 15px;
+            align-items: end;
+            margin-bottom: 20px;
+        }
+        
+        .vs-divider {
+            font-weight: 900;
+            color: var(--ga-blue);
+            padding-bottom: 12px;
+            font-size: 1rem;
+            text-align: center;
+        }
+        
+        .score-input {
+            width: 70px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 900;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--ga-yellow);
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: var(--ga-yellow);
+            border: 4px solid var(--ga-black);
+            padding: 40px;
+            width: 90%;
+            max-width: 600px;
+            transform: scale(0.9);
+            transition: transform 0.3s;
+            box-shadow: 12px 12px 0px var(--ga-blue);
+            color: var(--ga-black);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .history-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 3px solid var(--ga-black);
+            padding: 10px;
+            background: var(--ga-black);
+        }
+        
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: var(--ga-yellow);
+            border: 2px solid var(--ga-black);
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: var(--ga-black);
+            font-weight: 700;
+        }
+        
+        .badge {
+            padding: 4px 12px;
+            border: 2px solid var(--ga-black);
+            font-size: 0.75rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            background: var(--ga-black);
+            color: var(--ga-yellow);
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 25px;
+            border-bottom: 3px solid var(--ga-blue);
+            flex-wrap: wrap;
+        }
+        
+        .yellow-card .tabs {
+            border-bottom-color: var(--ga-black);
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: 800;
+            transition: all 0.2s;
+            color: var(--ga-yellow);
+            border: 3px solid var(--ga-blue);
+            border-bottom: none;
+            margin-right: -3px;
+            margin-bottom: -3px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--ga-black);
+        }
+        
+        .yellow-card .tab {
+            color: var(--ga-black);
+            border-color: var(--ga-black);
+            background: var(--ga-yellow);
+        }
+        
+        .tab.active {
+            background: var(--ga-blue);
+            color: white;
+        }
+        
+        .yellow-card .tab.active {
+            background: var(--ga-black);
+            color: var(--ga-yellow);
+        }
+        
+        .gd-positive { color: #00ff00; font-weight: 800; }
+        .gd-negative { color: #ff4444; font-weight: 600; }
+        
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--ga-black);
+            color: var(--ga-yellow);
+            padding: 20px 30px;
+            border: 3px solid var(--ga-blue);
+            font-weight: 900;
+            box-shadow: 8px 8px 0px rgba(0,101,179,0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 2000;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 1.1rem;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .stats-box {
+            background: var(--ga-yellow);
+            border: 3px solid var(--ga-black);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 6px 6px 0px var(--ga-black);
+        }
+        
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--ga-black);
+        }
+        
+        .news-ticker {
+            background: var(--ga-black);
+            color: var(--ga-yellow);
+            padding: 15px;
+            border: 3px solid var(--ga-blue);
+            margin-bottom: 30px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .news-ticker-content {
+            display: flex;
+            animation: scroll 25s linear infinite;
+            white-space: nowrap;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 1.1rem;
+        }
+        
+        @keyframes scroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        .news-card {
+            background: var(--ga-yellow);
+            border: 3px solid var(--ga-black);
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 6px 6px 0px var(--ga-blue);
+        }
+        
+        .news-headline {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: var(--ga-black);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            line-height: 1.3;
+        }
+        
+        .news-tag {
+            display: inline-block;
+            background: var(--ga-blue);
+            color: white;
+            padding: 4px 10px;
+            font-size: 0.7rem;
+            font-weight: 900;
+            margin-right: 10px;
+            text-transform: uppercase;
+        }
+        
+        .top-players-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .player-list {
+            background: var(--ga-black);
+            border: 3px solid var(--ga-blue);
+            padding: 20px;
+        }
+        
+        .player-list h4 {
+            color: var(--ga-yellow);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            font-weight: 900;
+            border-bottom: 2px solid var(--ga-blue);
+            padding-bottom: 10px;
+        }
+        
+        .player-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #333333;
+            color: var(--ga-yellow);
+        }
+        
+        .player-rank {
+            font-weight: 900;
+            font-size: 1.2rem;
+            margin-right: 10px;
+            color: var(--ga-blue);
+        }
+        
+        .player-stats {
+            background: var(--ga-blue);
+            color: white;
+            padding: 5px 12px;
+            font-weight: 900;
+            font-size: 1.1rem;
+        }
+        
+        .fixture-card {
+            background: var(--ga-black);
+            border: 3px solid var(--ga-blue);
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .fixture-teams {
+            font-weight: 800;
+            color: var(--ga-yellow);
+            font-size: 1rem;
+        }
+        
+        .fixture-time {
+            background: var(--ga-blue);
+            color: white;
+            padding: 5px 15px;
+            font-weight: 900;
+            font-size: 0.9rem;
+        }
+        
+        .scorer-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--ga-yellow);
+            margin: 30px 0 20px 0;
+            text-transform: uppercase;
+            border-bottom: 3px solid var(--ga-blue);
+            padding-bottom: 10px;
+        }
+        
+        .app-footer {
+            margin-top: 50px;
+            padding: 30px;
+            background: var(--ga-black);
+            border-top: 4px solid var(--ga-blue);
+            text-align: center;
+            color: var(--ga-yellow);
+        }
+        
+        .footer-title {
+            font-size: 1.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            letter-spacing: 3px;
+        }
+        
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        
+        .contact-item.phone {
+            font-size: 1.5rem;
+            color: var(--ga-yellow);
+            letter-spacing: 2px;
+        }
+        
+        .developer-credit {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--ga-blue);
+            font-size: 0.9rem;
+            color: #888888;
+        }
+        
+        .developer-credit a {
+            color: var(--ga-yellow);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            .league-title {
+                font-size: 2rem;
+            }
+            .contact-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .top-players-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Device Lock Screen -->
+    <div class="device-lock" id="deviceLock">
+        <div class="device-lock-content">
+            <div class="lock-logo">
+                <img src="logo.png" alt="Gamalakhe Association Logo">
+            </div>
+            <h2>GAMALAKHE ASSOCIATION</h2>
+            <p>Official League Management System</p>
+            <input type="password" id="adminPin" placeholder="Enter PIN" maxlength="6">
+            <button onclick="unlockDevice()">UNLOCK SYSTEM</button>
+            <p style="margin-top: 20px; font-size: 0.8rem; color: #666666;">Default PIN: 2026</p>
+            
+            <div class="lock-contact">
+                <p class="phone">📞 073 122 5913</p>
+                <p style="font-size: 0.9rem; color: #ffffff;">For Support & Inquiries</p>
+                <p class="developer">This App By Sandilempisane1@gmail.com</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="mainApp">
+        <header>
+            <div class="header-content">
+                <div class="logo-container">
+                    <img src="logo.png" alt="GA Logo">
+                </div>
+                <h1 class="league-title">GAMALAKHE ASSOCIATION</h1>
+                <p class="league-subtitle">Premier League Management System 2026</p>
+            </div>
+        </header>
+        
+        <div class="news-ticker" id="newsTicker">
+            <div class="news-ticker-content" id="tickerContent">
+                Welcome to Gamalakhe Association • Season 2026 • Excellence in Football • Contact: 073 122 5913
+            </div>
+        </div>
+        
+        <div class="main-grid">
+            <div class="left-panel">
+                <div class="card animate-in">
+                    <div class="card-header">
+                        <h2 class="card-title">⚽ League Standings</h2>
+                        <button class="btn btn-secondary btn-sm" onclick="resetLeague()">Reset</button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table id="leagueTable">
+                            <thead>
+                                <tr>
+                                    <th>POS</th>
+                                    <th style="text-align: left;">CLUB</th>
+                                    <th>P</th>
+                                    <th>W</th>
+                                    <th>D</th>
+                                    <th>L</th>
+                                    <th>GF</th>
+                                    <th>GA</th>
+                                    <th>GD</th>
+                                    <th>PTS</th>
+                                    <th>FORM</th>
+                                    <th>EDIT</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody"></tbody>
+                        </table>
+                        <div id="emptyState" class="empty-state" style="display: none;">
+                            <h3 style="font-weight: 900; margin-bottom: 10px;">NO CLUBS REGISTERED</h3>
+                            <p>Add clubs to begin the season</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="news-section" id="newsSection">
+                    <h3 class="section-title">📰 Latest Headlines</h3>
+                    <div id="newsContainer"></div>
+                </div>
+                
+                <div class="top-players-grid">
+                    <div class="player-list">
+                        <h4>⚽ Top Goal Scorers</h4>
+                        <div id="topScorersList"></div>
+                    </div>
+                    <div class="player-list">
+                        <h4>🎯 Top Assists</h4>
+                        <div id="topAssistsList"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <div class="card yellow-card animate-in">
+                    <div class="tabs">
+                        <div class="tab active" onclick="switchTab('add')">Add Club</div>
+                        <div class="tab" onclick="switchTab('match')">Result</div>
+                        <div class="tab" onclick="switchTab('players')">Players</div>
+                        <div class="tab" onclick="switchTab('fixtures')">Fixtures</div>
+                    </div>
+                    
+                    <div id="addTab" class="tab-content active">
+                        <h3 style="margin-bottom: 20px; font-weight: 900; text-transform: uppercase;">Register New Club</h3>
+                        <div class="form-group">
+                            <label>Club Name</label>
+                            <input type="text" id="newTeamName" placeholder="Enter club name...">
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="addTeam()">Register Club</button>
+                    </div>
+                    
+                    <div id="matchTab" class="tab-content">
+                        <h3 style="margin-bottom: 20px; font-weight: 900; text-transform: uppercase;">Record Match Result</h3>
+                        <div class="match-form">
+                            <div class="form-group">
+                                <label>Home Club</label>
+                                <select id="homeTeam"></select>
+                            </div>
+                            <div class="vs-divider">VS</div>
+                            <div class="form-group">
+                                <label>Away Club</label>
+                                <select id="awayTeam"></select>
+                            </div>
+                        </div>
+                        <div class="match-form" style="margin-top: -10px;">
+                            <input type="number" id="homeScore" class="score-input" placeholder="0" min="0">
+                            <div></div>
+                            <input type="number" id="awayScore" class="score-input" placeholder="0" min="0">
+                        </div>
+                        
+                        <h4 style="margin: 20px 0 10px 0; font-weight: 800; text-transform: uppercase; font-size: 0.9rem;">Goal Scorers (Home)</h4>
+                        <div id="homeScorers"></div>
+                        <button class="btn btn-secondary btn-sm" onclick="addScorerInput('home')" style="margin-bottom: 15px;">+ Add Scorer</button>
+                        
+                        <h4 style="margin: 10px 0 10px 0; font-weight: 800; text-transform: uppercase; font-size: 0.9rem;">Goal Scorers (Away)</h4>
+                        <div id="awayScorers"></div>
+                        <button class="btn btn-secondary btn-sm" onclick="addScorerInput('away')" style="margin-bottom: 20px;">+ Add Scorer</button>
+                        
+                        <button class="btn btn-primary" style="width: 100%;" onclick="recordMatch()">Update Table & Generate News</button>
+                        
+                        <div style="margin-top: 30px;">
+                            <h4 style="font-weight: 900; font-size: 0.9rem; margin-bottom: 15px; text-transform: uppercase; border-bottom: 3px solid #000000; padding-bottom: 10px;">Recent Results</h4>
+                            <div id="matchHistory" class="history-list"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="playersTab" class="tab-content">
+                        <h3 style="margin-bottom: 20px; font-weight: 900; text-transform: uppercase;">Add Player Stats</h3>
+                        <div class="form-group">
+                            <label>Player Name</label>
+                            <input type="text" id="playerName" placeholder="Enter player name...">
+                        </div>
+                        <div class="form-group">
+                            <label>Club</label>
+                            <select id="playerClub"></select>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; margin-bottom: 20px; align-items: end;">
+                            <div>
+                                <label>Goals</label>
+                                <input type="number" id="playerGoals" value="0" min="0">
+                            </div>
+                            <div>
+                                <label>Assists</label>
+                                <input type="number" id="playerAssists" value="0" min="0">
+                            </div>
+                            <button class="btn btn-primary" onclick="addPlayerStats()" style="height: 47px;">Add</button>
+                        </div>
+                        
+                        <h4 style="margin-top: 30px; font-weight: 900; text-transform: uppercase; border-bottom: 3px solid #000000; padding-bottom: 10px;">Player Database</h4>
+                        <div id="playerDatabase" style="max-height: 300px; overflow-y: auto; margin-top: 15px;"></div>
+                    </div>
+                    
+                    <div id="fixturesTab" class="tab-content">
+                        <h3 style="margin-bottom: 20px; font-weight: 900; text-transform: uppercase;">Add Upcoming Fixture</h3>
+                        <div class="form-group">
+                            <label>Home Club</label>
+                            <select id="fixtureHome"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Away Club</label>
+                            <select id="fixtureAway"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Date & Time</label>
+                            <input type="datetime-local" id="fixtureDate">
+                        </div>
+                        <div class="form-group">
+                            <label>Venue (Optional)</label>
+                            <input type="text" id="fixtureVenue" placeholder="Stadium name...">
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="addFixture()">Schedule Fixture</button>
+                        
+                        <h4 style="margin-top: 30px; font-weight: 900; text-transform: uppercase; border-bottom: 3px solid #000000; padding-bottom: 10px;">Upcoming Fixtures</h4>
+                        <div id="upcomingFixtures" style="margin-top: 15px;"></div>
+                    </div>
+                </div>
+                
+                <div class="card yellow-card animate-in" style="margin-top: 20px;">
+                    <h3 style="margin-bottom: 20px; font-weight: 900; text-transform: uppercase; font-size: 1.1rem; border-bottom: 3px solid #000000; padding-bottom: 10px;">Season Overview</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="stats-box">
+                            <div class="stats-number" id="totalTeams">0</div>
+                            <div class="stats-label">Clubs</div>
+                        </div>
+                        <div class="stats-box">
+                            <div class="stats-number" id="totalMatches">0</div>
+                            <div class="stats-label">Matches</div>
+                        </div>
+                        <div class="stats-box">
+                            <div class="stats-number" id="totalGoals">0</div>
+                            <div class="stats-label">Goals</div>
+                        </div>
+                        <div class="stats-box">
+                            <div class="stats-number" id="totalPlayers">0</div>
+                            <div class="stats-label">Players</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="app-footer">
+            <div class="footer-content">
+                <h3 class="footer-title">Gamalakhe Association</h3>
+                <div class="contact-info">
+                    <div class="contact-item phone">
+                        <span>📞</span>
+                        <span>073 122 5913</span>
+                    </div>
+                    <div class="contact-item">
+                        <span>✉️</span>
+                        <span>Sandilempisane1@gmail.com</span>
+                    </div>
+                </div>
+                <div class="developer-credit">
+                    <p>This App By <a href="mailto:Sandilempisane1@gmail.com">Sandilempisane1@gmail.com</a></p>
+                    <p>Official League Management System</p>
+                </div>
+                <p style="margin-top: 15px; font-size: 0.8rem; color: #666666;">© 2026 Gamalakhe Association. All Rights Reserved.</p>
+            </div>
+        </footer>
+    </div>
+    
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Club Statistics</h3>
+            </div>
+            <input type="hidden" id="editTeamId">
+            <div class="form-group">
+                <label>Club Name</label>
+                <input type="text" id="editTeamName">
+            </div>
+            <div class="stats-grid">
+                <div class="stat-input">
+                    <label>Played</label>
+                    <input type="number" id="editPlayed" min="0">
+                </div>
+                <div class="stat-input">
+                    <label>Won</label>
+                    <input type="number" id="editWon" min="0">
+                </div>
+                <div class="stat-input">
+                    <label>Drawn</label>
+                    <input type="number" id="editDrawn" min="0">
+                </div>
+                <div class="stat-input">
+                    <label>Lost</label>
+                    <input type="number" id="editLost" min="0">
+                </div>
+                <div class="stat-input">
+                    <label>GF</label>
+                    <input type="number" id="editGF" min="0">
+                </div>
+                <div class="stat-input">
+                    <label>GA</label>
+                    <input type="number" id="editGA" min="0">
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 25px;">
+                <button class="btn btn-secondary" style="flex: 1;" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" style="flex: 1;" onclick="saveEdit()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="toast" id="toast">Operation successful</div>
+
+    <script>
+        const ADMIN_PIN = '2026';
+        let isUnlocked = false;
+        
+        function unlockDevice() {
+            const input = document.getElementById('adminPin').value;
+            if (input === ADMIN_PIN) {
+                isUnlocked = true;
+                document.getElementById('deviceLock').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+                showToast('Welcome to Gamalakhe Association');
+                initApp();
+            } else {
+                alert('Incorrect PIN. Access denied.');
+            }
+        }
+        
+        let teams = JSON.parse(localStorage.getItem('gamalakheTeams')) || [];
+        let matches = JSON.parse(localStorage.getItem('gamalakheMatches')) || [];
+        let players = JSON.parse(localStorage.getItem('gamalakhePlayers')) || [];
+        let fixtures = JSON.parse(localStorage.getItem('gamalakheFixtures')) || [];
+        let news = JSON.parse(localStorage.getItem('gamalakheNews')) || [];
+        
+        function initApp() {
+            renderTable();
+            updateSelects();
+            renderMatchHistory();
+            renderPlayers();
+            renderFixtures();
+            renderNews();
+            updateStats();
+            updateTicker();
+        }
+        
+        function saveData() {
+            localStorage.setItem('gamalakheTeams', JSON.stringify(teams));
+            localStorage.setItem('gamalakheMatches', JSON.stringify(matches));
+            localStorage.setItem('gamalakhePlayers', JSON.stringify(players));
+            localStorage.setItem('gamalakheFixtures', JSON.stringify(fixtures));
+            localStorage.setItem('gamalakheNews', JSON.stringify(news));
+        }
+        
+        const newsTemplates = {
+            upset: [
+                "{loser} SHOCKED as {winner} Storm to Victory!",
+                "UPSET ALERT: {winner} End {loser}'s Unbeaten Run!",
+                "{loser} Drop Points in Stunning Defeat to {winner}!",
+                "DRAMA: {winner} Stun {loser} in Title Race Twist!"
+            ],
+            titleRace: [
+                "TITLE RACE HEATS UP: {winner} Close the Gap!",
+                "{winner} SEND MESSAGE to League Leaders!",
+                "CHAMPIONSHIP CHARGE: {winner} Keep Pressure On!",
+                "{loser} OUT OF TITLE RACE After Defeat!"
+            ],
+            drawDrama: [
+                "LAST GASP DRAMA: {home} and {away} Share Spoils!",
+                "MISSED CHANCE: {home} Drop Points Against {away}!",
+                "FIGHTBACK: {away} Snatch Point from {home}!"
+            ],
+            bigWin: [
+                "RAMPANT {winner}: {goals} Goal Masterclass Against {loser}!",
+                "{winner} RUN RIOT: {goals}-Goal Thrashing of {loser}!",
+                "ATTACKING MASTERCLASS: {winner} Hit {loser} for {goals}!"
+            ],
+            cleanSheet: [
+                "DEFENSIVE WALL: {winner} Shut Out {loser}!",
+                "{winner} KEEP Clean Sheet in Professional Display!",
+                "IMPENETRABLE: {winner} Defence Too Strong for {loser}!"
+            ]
+        };
+        
+        function generateNews(home, away, homeScore, awayScore) {
+            const winner = homeScore > awayScore ? home : awayScore > homeScore ? away : null;
+            const loser = homeScore > awayScore ? away : awayScore > homeScore ? home : null;
+            const margin = Math.abs(homeScore - awayScore);
+            const totalGoals = homeScore + awayScore;
+            
+            let template;
+            let headline;
+            
+            if (winner && margin >= 3) {
+                template = newsTemplates.bigWin[Math.floor(Math.random() * newsTemplates.bigWin.length)];
+                headline = template.replace('{winner}', winner).replace('{loser}', loser).replace('{goals}', totalGoals);
+            } else if (winner && (awayScore === 0 || homeScore === 0)) {
+                template = newsTemplates.cleanSheet[Math.floor(Math.random() * newsTemplates.cleanSheet.length)];
+                headline = template.replace('{winner}', winner).replace('{loser}', loser);
+            } else if (!winner) {
+                template = newsTemplates.drawDrama[Math.floor(Math.random() * newsTemplates.drawDrama.length)];
+                headline = template.replace('{home}', home).replace('{away}', away);
+            } else {
+                const homeTeam = teams.find(t => t.name === home);
+                const awayTeam = teams.find(t => t.name === away);
+                const sorted = [...teams].sort((a, b) => b.points - a.points);
+                const homePos = sorted.findIndex(t => t.id === homeTeam?.id);
+                const awayPos = sorted.findIndex(t => t.id === awayTeam?.id);
+                
+                if ((winner === home && awayPos < homePos) || (winner === away && homePos < awayPos)) {
+                    template = newsTemplates.upset[Math.floor(Math.random() * newsTemplates.upset.length)];
+                } else {
+                    template = newsTemplates.titleRace[Math.floor(Math.random() * newsTemplates.titleRace.length)];
+                }
+                headline = template.replace('{winner}', winner).replace('{loser}', loser);
+            }
+            
+            const newsItem = {
+                id: Date.now(),
+                headline: headline,
+                home: home,
+                away: away,
+                homeScore: homeScore,
+                awayScore: awayScore,
+                date: new Date().toLocaleDateString(),
+                type: winner ? (margin >= 3 ? 'big-win' : 'result') : 'draw'
+            };
+            
+            news.unshift(newsItem);
+            if (news.length > 20) news = news.slice(0, 20);
+            saveData();
+            renderNews();
+            updateTicker();
+            
+            return headline;
+        }
+        
+        function renderNews() {
+            const container = document.getElementById('newsContainer');
+            if (news.length === 0) {
+                container.innerHTML = `
+                    <div class="news-card">
+                        <span class="news-tag">Welcome</span>
+                        <span class="news-meta">Gamalakhe Association</span>
+                        <div class="news-headline">Season 2026 Kicks Off - All Clubs Ready for Action!</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = news.slice(0, 5).map(item => {
+                const tag = item.type === 'big-win' ? 'BIG WIN' : item.type === 'draw' ? 'DRAW' : 'RESULT';
+                return `
+                    <div class="news-card">
+                        <span class="news-tag">${tag}</span>
+                        <span class="news-meta">${item.date} • ${item.home} ${item.homeScore}-${item.awayScore} ${item.away}</span>
+                        <div class="news-headline">${item.headline}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function updateTicker() {
+            const ticker = document.getElementById('tickerContent');
+            if (news.length > 0) {
+                const headlines = news.slice(0, 3).map(n => n.headline).join(' • ');
+                ticker.textContent = headlines + ' • Gamalakhe Association • Contact: 073 122 5913';
+            }
+        }
+        
+        function addTeam() {
+            const nameInput = document.getElementById('newTeamName');
+            const name = nameInput.value.trim();
+            
+            if (!name) {
+                showToast('Please enter a club name', 'error');
+                return;
+            }
+            
+            if (teams.find(t => t.name.toLowerCase() === name.toLowerCase())) {
+                showToast('Club already registered!', 'error');
+                return;
+            }
+            
+            const team = {
+                id: Date.now(),
+                name: name,
+                played: 0,
+                won: 0,
+                drawn: 0,
+                lost: 0,
+                gf: 0,
+                ga: 0,
+                points: 0,
+                form: []
+            };
+            
+            teams.push(team);
+            saveData();
+            renderTable();
+            updateSelects();
+            updateStats();
+            
+            nameInput.value = '';
+            showToast(${name} registered successfully);
+        }
+        
+        function addScorerInput(team) {
+            const container = document.getElementById(team + 'Scorers');
+            const div = document.createElement('div');
+            div.className = 'scorer-input';
+            div.innerHTML = `
+                <input type="text" placeholder="Player name" class="${team}-scorer-name">
+                <input type="number" placeholder="Goals" value="1" min="1" class="${team}-scorer-goals">
+                <input type="number" placeholder="Assists" value="0" min="0" class="${team}-scorer-assists">
+            `;
+            container.appendChild(div);
+        }
+        
+        function recordMatch() {
+            const homeId = parseInt(document.getElementById('homeTeam').value);
+            const awayId = parseInt(document.getElementById('awayTeam').value);
+            const homeScore = parseInt(document.getElementById('homeScore').value) || 0;
+            const awayScore = parseInt(document.getElementById('awayScore').value) || 0;
+            
+            if (!homeId || !awayId) {
+                showToast('Please select both clubs', 'error');
+                return;
+            }
+            
+            if (homeId === awayId) {
+                showToast('A club cannot play itself!', 'error');
+                return;
+            }
+            
+            const homeTeam = teams.find(t => t.id === homeId);
+            const awayTeam = teams.find(t => t.id === awayId);
+            
+            document.querySelectorAll('.home-scorer-name').forEach((input, idx) => {
+                const name = input.value.trim();
+                const goals = parseInt(document.querySelectorAll('.home-scorer-goals')[idx]?.value) || 0;
+                const assists = parseInt(document.querySelectorAll('.home-scorer-assists')[idx]?.value) || 0;
+                if (name) updatePlayerStats(name, homeTeam.name, goals, assists);
+            });
+            
+            document.querySelectorAll('.away-scorer-name').forEach((input, idx) => {
+                const name = input.value.trim();
+                const goals = parseInt(document.querySelectorAll('.away-scorer-goals')[idx]?.value) || 0;
+                const assists = parseInt(document.querySelectorAll('.away-scorer-assists')[idx]?.value) || 0;
+                if (name) updatePlayerStats(name, awayTeam.name, goals, assists);
+            });
+            
+            homeTeam.played++;
+            awayTeam.played++;
+            homeTeam.gf += homeScore;
+            homeTeam.ga += awayScore;
+            awayTeam.gf += awayScore;
+            awayTeam.ga += homeScore;
+            
+            if (homeScore > awayScore) {
+                homeTeam.won++;
+                awayTeam.lost++;
+                homeTeam.points += 3;
+                homeTeam.form.unshift('W');
+                awayTeam.form.unshift('L');
+            } else if (homeScore < awayScore) {
+                awayTeam.won++;
+                homeTeam.lost++;
+                awayTeam.points += 3;
+                awayTeam.form.unshift('W');
+                homeTeam.form.unshift('L');
+            } else {
+                homeTeam.drawn++;
+                awayTeam.drawn++;
+                homeTeam.points += 1;
+                awayTeam.points += 1;
+                homeTeam.form.unshift('D');
+                awayTeam.form.unshift('D');
+            }
+            
+            homeTeam.form = homeTeam.form.slice(0, 5);
+            awayTeam.form = awayTeam.form.slice(0, 5);
+            
+            matches.unshift({
+                id: Date.now(),
+                home: homeTeam.name,
+                away: awayTeam.name,
+                homeScore,
+                awayScore,
+                date: new Date().toLocaleDateString()
+            });
+            
+            const headline = generateNews(homeTeam.name, awayTeam.name, homeScore, awayScore);
+            
+            saveData();
+            renderTable();
+            renderMatchHistory();
+            renderPlayers();
+            updateStats();
+            
+            document.getElementById('homeScore').value = '';
+            document.getElementById('awayScore').value = '';
+            document.getElementById('homeScorers').innerHTML = '';
+            document.getElementById('awayScorers').innerHTML = '';
+            
+            showToast(headline);
+        }
+        
+        function updatePlayerStats(name, club, goals, assists) {
+            let player = players.find(p => p.name.toLowerCase() === name.toLowerCase() && p.club === club);
+            if (!player) {
+                player = { id: Date.now(), name, club, goals: 0, assists: 0 };
+                players.push(player);
+            }
+            player.goals += goals;
+            player.assists += assists;
+        }
+        
+        function addPlayerStats() {
+            const name = document.getElementById('playerName').value.trim();
+            const club = document.getElementById('playerClub').value;
+            const goals = parseInt(document.getElementById('playerGoals').value) || 0;
+            const assists = parseInt(document.getElementById('playerAssists').value) || 0;
+            
+            if (!name || !club) {
+                showToast('Please enter player name and select club', 'error');
+                return;
+            }
+            
+            updatePlayerStats(name, club, goals, assists);
+            saveData();
+            renderPlayers();
+            updateStats();
+            
+            document.getElementById('playerName').value = '';
+            document.getElementById('playerGoals').value = '0';
+            document.getElementById('playerAssists').value = '0';
+            
+            showToast(${name} stats updated);
+        }
+        
+        function addFixture() {
+            const homeId = document.getElementById('fixtureHome').value;
+            const awayId = document.getElementById('fixtureAway').value;
+            const date = document.getElementById('fixtureDate').value;
+            const venue = document.getElementById('fixtureVenue').value.trim();
+            
+            if (!homeId || !awayId || !date) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            if (homeId === awayId) {
+                showToast('Home and away cannot be the same', 'error');
+                return;
+            }
+            
+            const homeTeam = teams.find(t => t.id == homeId);
+            const awayTeam = teams.find(t => t.id == awayId);
+            
+            fixtures.push({
+                id: Date.now(),
+                home: homeTeam.name,
+                away: awayTeam.name,
+                date: new Date(date).toLocaleString(),
+                venue: venue || 'TBC',
+                timestamp: new Date(date).getTime()
+            });
+            
+            fixtures.sort((a, b) => a.timestamp - b.timestamp);
+            saveData();
+            renderFixtures();
+            
+            document.getElementById('fixtureVenue').value = '';
+            showToast('Fixture scheduled');
+        }
+        
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (teams.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            const sortedTeams = [...teams].sort((a, b) => {
+                if (b.points !== a.points) return b.points - a.points;
+                const gdA = a.gf - a.ga;
+                const gdB = b.gf - b.ga;
+                if (gdB !== gdA) return gdB - gdA;
+                return b.gf - a.gf;
+            });
+            
+            tbody.innerHTML = sortedTeams.map((team, index) => {
+                const gd = team.gf - team.ga;
+                const gdClass = gd > 0 ? 'gd-positive' : 'gd-negative';
+                const gdDisplay = gd > 0 ? +${gd} : gd;
+                
+                let posClass = '';
+                if (index === 0) posClass = 'top';
+                
+                const formHtml = team.form.map(result => {
+                    const className = result === 'W' ? 'form-w' : result === 'D' ? 'form-d' : 'form-l';
+                    return <div class="form-dot ${className}">${result}</div>;
+                }).join('');
+                
+                return `
+                    <tr>
+                        <td class="pos ${posClass}">${index + 1}</td>
+                        <td class="team-cell">
+                            <div class="team-logo">
+                                <img src="logo.png" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                            ${team.name}
+                        </td>
+                        <td>${team.played}</td>
+                        <td>${team.won}</td>
+                        <td>${team.drawn}</td>
+                        <td>${team.lost}</td>
+                        <td>${team.gf}</td>
+                        <td>${team.ga}</td>
+                        <td class="${gdClass}">${gdDisplay}</td>
+                        <td class="points">${team.points}</td>
+                        <td>
+                            <div class="form">${formHtml || '-'}</div>
+                        </td>
+                        <td class="actions">
+                            <button class="icon-btn" onclick="openEdit(${team.id})" title="Edit">✎</button>
+                            <button class="icon-btn" onclick="deleteTeam(${team.id})" title="Delete">✕</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        function renderPlayers() {
+            const scorersList = document.getElementById('topScorersList');
+            const assistsList = document.getElementById('topAssistsList');
+            const database = document.getElementById('playerDatabase');
+            
+            const sortedByGoals = [...players].sort((a, b) => b.goals - a.goals).slice(0, 10);
+            const sortedByAssists = [...players].sort((a, b) => b.assists - a.assists).slice(0, 10);
+            
+            if (players.length === 0) {
+                scorersList.innerHTML = '<div class="player-item" style="justify-content: center; color: #666666;">No goals recorded yet</div>';
+                assistsList.innerHTML = '<div class="player-item" style="justify-content: center; color: #666666;">No assists recorded yet</div>';
+                database.innerHTML = '<p style="color: #666666; text-align: center; padding: 20px;">No players added</p>';
+                return;
+            }
+            
+            scorersList.innerHTML = sortedByGoals.map((p, i) => `
+                <div class="player-item">
+                    <span class="player-rank">${i + 1}</span>
+                    <div class="player-name">
+                        ${p.name}
+                        <span style="font-size: 0.8rem; color: #aaaaaa; margin-left: 5px;">(${p.club})</span>
+                    </div>
+                    <span class="player-stats">${p.goals}</span>
+                </div>
+            `).join('');
+            
+            assistsList.innerHTML = sortedByAssists.map((p, i) => `
+                <div class="player-item">
+                    <span class="player-rank">${i + 1}</span>
+                    <div class="player-name">
+                        ${p.name}
+                        <span style="font-size: 0.8rem; color: #aaaaaa; margin-left: 5px;">(${p.club})</span>
+                    </div>
+                    <span class="player-stats">${p.assists}</span>
+                </div>
+            `).join('');
+            
+            database.innerHTML = players.sort((a, b) => (b.goals + b.assists) - (a.goals + a.assists)).map(p => `
+                <div class="player-item">
+                    <div class="player-name">${p.name} <span style="font-size: 0.8rem; color: #aaaaaa;">(${p.club})</span></div>
+                    <div>
+                        <span style="color: #FFD700; margin-right: 10px;">⚽${p.goals}</span>
+                        <span style="color: #aaaaaa;">🎯${p.assists}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function renderFixtures() {
+            const container = document.getElementById('upcomingFixtures');
+            const now = Date.now();
+            const upcoming = fixtures.filter(f => f.timestamp > now).slice(0, 10);
+            
+            if (upcoming.length === 0) {
+                container.innerHTML = '<p style="color: #666666; text-align: center; padding: 20px;">No fixtures scheduled</p>';
+                return;
+            }
+            
+            container.innerHTML = upcoming.map(f => `
+                <div class="fixture-card">
+                    <div class="fixture-teams">${f.home} vs ${f.away}</div>
+                    <div class="fixture-time">${f.date}</div>
+                </div>
+            `).join('');
+        }
+        
+        function updateSelects() {
+            const options = teams.map(t => <option value="${t.id}">${t.name}</option>).join('');
+            const selects = ['homeTeam', 'awayTeam', 'playerClub', 'fixtureHome', 'fixtureAway'];
+            selects.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.innerHTML = '<option value="">Select...</option>' + options;
+            });
+        }
+        
+        function renderMatchHistory() {
+            const container = document.getElementById('matchHistory');
+            if (matches.length === 0) {
+                container.innerHTML = '<p style="color: #666666; font-size: 0.9rem; text-align: center; padding: 20px;">No results recorded</p>';
+                return;
+            }
+            
+            container.innerHTML = matches.slice(0, 10).map(match => {
+                const result = match.homeScore > match.awayScore ? 'H' : 
+                              match.homeScore < match.awayScore ? 'A' : 'D';
+                const resultText = result === 'H' ? 'HOME' : result === 'A' ? 'AWAY' : 'DRAW';
+                
+                return `
+                    <div class="history-item">
+                        <div>
+                            <div style="font-weight: 800; color: #000000;">
+                                ${match.home} ${match.homeScore} - ${match.awayScore} ${match.away}
+                            </div>
+                            <div style="font-size: 0.8rem; color: #333333; margin-top: 4px;">
+                                ${match.date}
+                            </div>
+                        </div>
+                        <span class="badge">${resultText}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function updateStats() {
+            document.getElementById('totalTeams').textContent = teams.length;
+            document.getElementById('totalMatches').textContent = matches.length;
+            document.getElementById('totalGoals').textContent = players.reduce((sum, p) => sum + p.goals, 0);
+            document.getElementById('totalPlayers').textContent = players.length;
+        }
+        
+        function openEdit(id) {
+            const team = teams.find(t => t.id === id);
+            if (!team) return;
+            
+            document.getElementById('editTeamId').value = id;
+            document.getElementById('editTeamName').value = team.name;
+            document.getElementById('editPlayed').value = team.played;
+            document.getElementById('editWon').value = team.won;
+            document.getElementById('editDrawn').value = team.drawn;
+            document.getElementById('editLost').value = team.lost;
+            document.getElementById('editGF').value = team.gf;
+            document.getElementById('editGA').value = team.ga;
+            
+            document.getElementById('editModal').classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('editModal').classList.remove('active');
+        }
+        
+        function saveEdit() {
+            const id = parseInt(document.getElementById('editTeamId').value);
+            const team = teams.find(t => t.id === id);
+            
+            team.name = document.getElementById('editTeamName').value;
+            team.played = parseInt(document.getElementById('editPlayed').value) || 0;
+            team.won = parseInt(document.getElementById('editWon').value) || 0;
+            team.drawn = parseInt(document.getElementById('editDrawn').value) || 0;
+            team.lost = parseInt(document.getElementById('editLost').value) || 0;
+            team.gf = parseInt(document.getElementById('editGF').value) || 0;
+            team.ga = parseInt(document.getElementById('editGA').value) || 0;
+            team.points = (team.won * 3) + team.drawn;
+            
+            saveData();
+            renderTable();
+            updateSelects();
+            closeModal();
+            showToast('Club statistics updated');
+        }
+        
+        function deleteTeam(id) {
+            if (!confirm('Remove this club from the league?')) return;
+            teams = teams.filter(t => t.id !== id);
+            saveData();
+            renderTable();
+            updateSelects();
+            updateStats();
+            showToast('Club removed');
+        }
+        
+        function resetLeague() {
+            if (!confirm('DELETE ALL DATA? This cannot be undone!')) return;
+            teams = []; matches = []; players = []; fixtures = []; news = [];
+            saveData();
+            initApp();
+            showToast('League reset complete');
+        }
+        
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tab + 'Tab').classList.add('active');
+        }
+        
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 4000);
+        }
+        
+        document.getElementById('editModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('editModal')) closeModal();
+        });
+        
+        document.getElementById('newTeamName').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addTeam();
+        });
+        
+        document.getElementById('adminPin').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') unlockDevice();
+        });
+    </script>
+</body>
+</html>
